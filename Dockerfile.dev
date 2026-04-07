@@ -1,0 +1,14 @@
+FROM node:24.0.2-alpine3.20
+
+WORKDIR /app
+
+RUN apk add --no-cache --virtual git && \
+    npm install -g @nestjs/cli
+
+COPY package*.json ./
+
+RUN npm ci
+
+COPY . .
+
+EXPOSE 3000

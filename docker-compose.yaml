@@ -1,0 +1,48 @@
+name: task
+
+services:
+  service:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    volumes:
+      - .:/app
+    command: 
+      - sh
+      - -c
+      - |
+        npm ci
+        npm run start:dev
+    env_file:
+      - .env
+    depends_on:
+      - mysql
+    networks:
+      - task-network
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_DATABASE: '${DB_NAME}'
+    volumes:
+      - task-db-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - task-network
+  mailer:
+    image: axllent/mailpit:latest
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - task-network
+networks:
+  task-network:
+    driver: bridge
+
+volumes:
+  task-db-data:
+    driver: local
