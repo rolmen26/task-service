@@ -23,9 +23,10 @@ services:
       - task-network
   mysql:
     image: mysql:8.0
+    container_name: task-mysql
     environment:
       MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
-      MYSQL_DATABASE: '${DB_NAME}'
+      MYSQL_DATABASE: '${DB_DATABASE}'
     volumes:
       - task-db-data:/var/lib/mysql
     ports:
