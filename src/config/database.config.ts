@@ -5,6 +5,14 @@ import * as path from 'path';
 
 const rdsCa = fs.readFileSync(path.join(__dirname, '../../global-bundle.pem'));
 
+const sslOptions = process.env.NODE_ENV === 'production' ? {
+  ssl: {
+    require: true,
+    rejectUnauthorized: false,
+    ca: [rdsCa],
+  },
+} : {};
+
 export default registerAs<SequelizeModuleOptions>('database', () => ({
   dialect: 'mysql' as const,
   host: process.env.DB_HOST || 'localhost',
@@ -21,11 +29,5 @@ export default registerAs<SequelizeModuleOptions>('database', () => ({
     acquire: 30000,
     idle: 10000,
   },
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false,
-      ca: [rdsCa],
-    },
-  },
+  dialectOptions: sslOptions,
 }));
