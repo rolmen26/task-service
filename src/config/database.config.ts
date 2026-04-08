@@ -1,5 +1,9 @@
 import { registerAs } from '@nestjs/config';
 import type { SequelizeModuleOptions } from '@nestjs/sequelize';
+import * as fs from 'fs';
+import * as path from 'path';
+
+const rdsCa = fs.readFileSync(path.join(__dirname, '../../global-bundle.pem'));
 
 export default registerAs<SequelizeModuleOptions>('database', () => ({
   dialect: 'mysql' as const,
@@ -16,5 +20,12 @@ export default registerAs<SequelizeModuleOptions>('database', () => ({
     min: 2,
     acquire: 30000,
     idle: 10000,
+  },
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+      ca: [rdsCa],
+    },
   },
 }));

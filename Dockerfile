@@ -18,7 +18,18 @@ RUN npm run build
 
 FROM base AS production
 WORKDIR /app
+
 COPY --from=production-deps /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
+COPY --from=build /app/global-bundle.pem ./global-bundle.pem
+COPY --from=build /app/package.json ./package.json
+COPY --from=build /app/src/database/migrations ./src/database/migrations
+COPY --from=build /app/src/database/seeders ./src/database/seeders
+COPY --from=build /app/src/config/sequelize.cjs ./src/config/sequelize.cjs
+COPY --from=build /app/.sequelizerc ./.sequelizerc
+
+ENV NODE_ENV=production
+ENV PORT=3000
+
 EXPOSE 3000
-CMD ["node", "dist/main.js"]
+CMD ["npm", "run", "start:prod"]
