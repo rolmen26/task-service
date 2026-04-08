@@ -16,7 +16,7 @@ import { TaskPriority } from '../task-priority.enum';
 
 @Table({
   tableName: 'tasks',
-} as any)
+})
 export class TaskPersistenceEntity extends Model<TaskPersistenceEntity> {
   @PrimaryKey
   @Column({

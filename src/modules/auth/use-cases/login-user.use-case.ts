@@ -1,4 +1,5 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { LoginResultContract } from '../contracts/login-result.contract';
 import { PASSWORD_HASHER } from '../contracts/password-hasher.contract';
 import type { PasswordHasherContract } from '../contracts/password-hasher.contract';
@@ -13,6 +14,7 @@ export class LoginUserUseCase {
     private readonly userRepository: UserRepositoryContract,
     @Inject(PASSWORD_HASHER)
     private readonly passwordHasher: PasswordHasherContract,
+    private readonly jwtService: JwtService,
   ) {}
 
   async execute(input: LoginDto): Promise<LoginResultContract> {
@@ -33,9 +35,16 @@ export class LoginUserUseCase {
       throw new UnauthorizedException('Invalid credentials');
     }
 
+    const token = this.jwtService.sign({
+      sub: user.id,
+      email: user.email,
+      name: user.name,
+    });
+
     return {
       email: user.email,
       name: user.name,
+      token,
     };
   }
 }

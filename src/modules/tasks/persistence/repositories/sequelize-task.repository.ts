@@ -5,7 +5,7 @@ import { TaskRepositoryContract } from '../../contracts/task-repository.contract
 import { Task } from '../../entity/task.domain';
 import { TaskMapper } from '../mappers/task.mapper';
 import { FindTasksDto } from '../../dto/find-tasks.dto';
-import { Op, WhereOptions } from 'sequelize';
+import { WhereOptions } from 'sequelize';
 
 @Injectable()
 export class SequelizeTaskRepository implements TaskRepositoryContract {
@@ -25,7 +25,6 @@ export class SequelizeTaskRepository implements TaskRepositoryContract {
       const savedEntity = await updatedEntity.save();
       return this.taskMapper.toDomain(savedEntity);
     } else {
-      // Create
       const newEntity = this.taskMapper.toEntity(task);
       const savedEntity = await newEntity.save();
       return this.taskMapper.toDomain(savedEntity);
@@ -39,7 +38,7 @@ export class SequelizeTaskRepository implements TaskRepositoryContract {
       where.status = findTasksDto.status;
     }
 
-    const taskEntities = await this.taskModel.findAll({where});
+    const taskEntities = await this.taskModel.findAll({ where });
     return taskEntities.map((entity) => this.taskMapper.toDomain(entity));
   }
 

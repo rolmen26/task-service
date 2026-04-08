@@ -16,7 +16,10 @@ export class TasksService {
     private readonly taskRepository: TaskRepositoryContract,
   ) {}
 
-  async create(createTaskDto: CreateTaskDto): Promise<TaskDto> {
+  async create(
+    createTaskDto: CreateTaskDto,
+    user: { id: number },
+  ): Promise<TaskDto> {
     const task = new Task(
       null,
       createTaskDto.title,
@@ -24,7 +27,7 @@ export class TasksService {
       createTaskDto.status || TaskStatus.PENDING,
       createTaskDto.priority || TaskPriority.MEDIUM,
       createTaskDto.dueDate ?? null,
-      createTaskDto.ownerId,
+      user.id,
     );
 
     const savedTask = await this.taskRepository.save(task);

@@ -29,5 +29,6 @@ export class CreateTaskDto {
   dueDate?: Date;
 
   @IsNumber()
-  ownerId: number;
+  @IsOptional()
+  ownerId?: number;
 }

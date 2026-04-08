@@ -12,7 +12,7 @@ import {
 
 @Table({
   tableName: 'users',
-} as any)
+})
 export class UserPersistenceEntity extends Model<UserPersistenceEntity> {
   @PrimaryKey
   @Column({ type: DataType.INTEGER, autoIncrement: true })
