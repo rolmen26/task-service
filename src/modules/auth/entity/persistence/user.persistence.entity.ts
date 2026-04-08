@@ -1,5 +1,5 @@
 import {
-  AllowNull, AutoIncrement,
+  AllowNull,
   Column,
   CreatedAt,
   DataType,
@@ -15,7 +15,6 @@ import {
 } as any)
 export class UserPersistenceEntity extends Model<UserPersistenceEntity> {
   @PrimaryKey
-  @Default(DataType.INTEGER)
   @Column({ type: DataType.INTEGER, autoIncrement: true })
   declare id: number;
 
